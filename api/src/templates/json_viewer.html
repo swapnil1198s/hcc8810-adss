@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+
+<div style="width:840px; margin-left: auto; margin-right: auto;">
+<h2>Movie Database Preview</h2>
+
+<ul>
+	{% for movie in movies %}
+	<li style="margin-bottom: 9px;">
+		<div style="display: flex; border-radius: 9px; background-color: mistyrose; padding: 9px">
+			<div style="width: 500px;">
+				<table style="width: 480px; table-layout: fixed; border-collapse: collapse;">
+					<tr style="border-bottom: black;border-bottom-style: double;">
+						<th style="width: 120px;"><strong>Features:</strong></th>
+						<th style="width: 360px;">Values</th>
+					</tr>
+					<tr>
+						<td style="width: 120px;text-align: right;padding: 3px;"><strong>title:</strong></td>
+						<td style="width: 360px;overflow: hidden;padding: 3px;">{{ movie.title }}</td>
+					</tr>
+					{% for k, v in movie.items() %}
+					{% if k != 'title' %}
+					<tr>
+						<td style="width: 120px;text-align: right;padding: 3px;"><strong>{{ k }}:</strong></td>
+						<td style="width: 360px;overflow: hidden;padding: 3px;">{{ v }}</td>
+					</tr>
+					{% endif %}
+					{% endfor %}
+				</table>
+				<!-- <p><strong>title:</strong> {{ movie.title }} </p>
+				<p><strong>title (year):</strong> {{ movie.title_year }} </p>
+				<p><strong>movie_id: </strong> {{ movie.movie_id }} </p>
+				<p><strong>imdb_id: </strong> {{ movie.imdb_id }} </p>
+				<p><strong>year: </strong> {{ movie.year }} </p>
+				<p><strong>runtime: </strong> {{ movie.runtime }} </p>
+				<p><strong>genre: </strong> {{ movie.genre }} </p>
+				<p><strong>aveRating: </strong> {{ movie.aveRating }} </p>
+				<p><strong>director: </strong> {{ movie.director }} </p>
+				<p><strong>writer: </strong> {{ movie.writer }} </p>
+				<p><strong>description: </strong> {{ movie.description }} </p>
+				<p><strong>cast: </strong> {{ movie.cast }} </p>
+				<p><strong>rssa_id: </strong> {{ movie.rssa_id }} </p>
+				<p><strong>poster: </strong> {{ movie.poster }} </p> -->
+			</div>
+			<div style="width: 300px; padding: 9px">
+				<img style="max-width: 270px; margin-top: 18px;" src="{{ movie.poster }}" />
+			</div>
+		</div>
+	</li>
+	{% endfor %}
+</ul>
+</div>
+</body>
+</html>
