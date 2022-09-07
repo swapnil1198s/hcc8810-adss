@@ -1,0 +1,53 @@
+{
+  "name": "recsys-react",
+  "version": "2.0.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.3.0",
+    "axios": "0.27.2",
+    "bootstrap": "^5.2.0",
+    "buffer": "^6.0.3",
+    "country-state-city": "^3.1.0",
+    "d3": "^7.6.1",
+    "eslint-config-react-app": "^7.0.1",
+    "html-react-parser": "^3.0.4",
+    "intro.js": "^6.0.0",
+    "intro.js-react": "0.6.0",
+    "npm": "^8.18.0",
+    "npm-check": "^6.0.1",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.5.0",
+    "react-bootstrap-icons": "^1.8.4",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "^5.0.1",
+    "react-star-ratings": "^2.3.0",
+    "react-step-progress-bar": "^1.0.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "homepage": "https://rssa.recsys.dev/",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
+}
