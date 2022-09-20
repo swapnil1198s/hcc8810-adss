@@ -7,8 +7,6 @@ if not sys.warnoptions:
 '''          
 import numpy as np
 import pandas as pd
-#from lenskit.algorithms import als
-#import customizedALS
 import time
 import setpath
 import pickle

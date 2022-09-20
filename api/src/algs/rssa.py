@@ -5,7 +5,7 @@ import warnings
 if not sys.warnoptions:
         warnings.simplefilter("ignore")
 # There will be NumbaDeprecationWarnings here, use the above code to hide the warnings
-         
+
 import numpy as np
 import pandas as pd
 import time
@@ -23,13 +23,10 @@ def RSSA_live_prediction(algo, liveUserID, new_ratings, item_popularity):
     '''
     items = item_popularity.item.unique()
         # items is NOT sorted
-    #>>> items, rating_counts = np.unique(ratings_train['item'], return_counts = True)
-        # items is sorted by default
     als_implicit_preds, liveUser_feature = algo.predict_for_user(liveUserID, items, new_ratings)
         # return a series with 'items' as the index & liveUser_feature: np.ndarray
     als_implicit_preds_df = als_implicit_preds.to_frame().reset_index()
     als_implicit_preds_df.columns = ['item', 'score']
-    # print(als_implicit_preds_df.sort_values(by = 'score', ascending = False).head(10))
     
     ## discounting popular items
     highest_count = item_popularity['count'].max()
@@ -37,7 +34,6 @@ def RSSA_live_prediction(algo, liveUserID, new_ratings, item_popularity):
     while highest_count/(10 ** digit) > 1:
         digit = digit + 1
     denominator = 10 ** digit
-    # print(denominator)
     
     a = 0.5 # try [0.2, 0.3, 0.4, 0.5, 0.6, 1] on set 6
     als_implicit_preds_popularity_df = pd.merge(als_implicit_preds_df, item_popularity, how = 'left', on = 'item')
@@ -121,8 +117,8 @@ def controversial(algo, users_neighbor, item_popularity):
         # ['item', 'variance', 'count', 'rank']  
         
     return neighbor_variance_df
-         
         
+
 def similarity_user_features(umat, users, feature_newUser, method = 'cosine'):
     '''
         ALS has already pre-weighted the user features/item features;
@@ -147,12 +143,10 @@ def similarity_user_features(umat, users, feature_newUser, method = 'cosine'):
                 # the default value of ord parameter in numpy.linalg.norm is 2.
             distance.append(dis)
     # convert to a dataframe with indexing of items
-    # print(users)
-        # Int64Index
     distance = pd.DataFrame({'user': users.values, 'distance': distance})
-    #print(distance.head())
 
     return distance
+
 
 def find_neighbors(umat, users, feature_newUser, distance_method, num_neighbors):
     similarity = similarity_user_features(umat, users, feature_newUser, distance_method)
@@ -164,8 +158,6 @@ def find_neighbors(umat, users, feature_newUser, distance_method, num_neighbors)
     
     return neighbors_similarity
     
-
-        
     
 if __name__ == "__main__":    
     ### Import implicit MF model, saved in an object
@@ -185,8 +177,6 @@ if __name__ == "__main__":
     movie_title = movie_info[['movie_id', 'title']] 
     movie_title = movie_title.rename({'movie_id': 'item'}, axis = 1)
         # ['item', 'title']
-    # print(type(movie_title['item'][0]))
-    # print(movie_title.head(10))
     
 
     ### Import new ratings of the live user
@@ -195,7 +185,6 @@ if __name__ == "__main__":
     
     for liveUserID in RSSA_team:
         # liveUserID = input('Enter a user ID: ')
-        # liveUserID = 'Bart'
         testing_path = './testing_rating_rated_items_extracted/ratings_set6_rated_only_'
         fullpath_test =  testing_path + liveUserID + '.csv'
         ratings_liveUser = pd.read_csv(fullpath_test, encoding='latin1')
@@ -215,9 +204,7 @@ if __name__ == "__main__":
         # extract the not-rated-yet items
         rated_items = ratings_liveUser.item.unique()
         RSSA_preds_titled_noRated1 = RSSA_preds_titled[~RSSA_preds_titled['item'].isin(rated_items)]
-             # ['item', 'score', 'count', 'rank', 'discounted_score', 'title']  
-        #print(RSSA_preds_titled.shape)    
-        #print(RSSA_preds_titled_noRated1.shape)  
+            # ['item', 'score', 'count', 'rank', 'discounted_score', 'title']  
 
         #### Generate recommendations
         print('\n\nRSSA recommendations for user: %s' % liveUserID)
@@ -227,9 +214,6 @@ if __name__ == "__main__":
         discounted_preds_sorted = RSSA_preds_titled_noRated1.sort_values(by = 'discounted_score', ascending = False)
         recs_topN_traditional = traditional_preds_sorted.head(N)
         recs_topN_discounted = discounted_preds_sorted.head(N)
-        #print('\nTraditional Top-N:')
-        #print(recs_topN_traditional)
-        # print(recs_topN_discounted[['item', 'count', 'rank', 'discounted_score', 'title']])
         print(recs_topN_discounted[['count', 'rank', 'title']])
         
         #===> 2 - Things we think you will hate
@@ -244,8 +228,6 @@ if __name__ == "__main__":
             # ['item', 'score', 'count', 'rank', 'discounted_score', 'title', 'ave_score', 'ave_discounted_score', 'margin_discounted', 'margin']
         recs_hate_items = RSSA_preds_titled_noRated2.sort_values(by = 'margin', ascending = False).head(N)
         recs_hate_items_discounted = RSSA_preds_titled_noRated2.sort_values(by = 'margin_discounted', ascending = False).head(N)
-        #print(recs_hate_items[['item', 'count', 'rank', 'margin_discounted', 'title']])
-        # print(recs_hate_items_discounted[['item', 'count', 'rank', 'margin_discounted', 'title']])
         print(recs_hate_items_discounted[['count', 'rank', 'title']])
         
         #===> 3 - Things you will be among the first to try
@@ -266,7 +248,6 @@ if __name__ == "__main__":
         # essential components: resample, train 20 resampled implicitMF models offline
         # personalized std: std/ave(std): std of an item/ ave (stds) of this item over all the other users.
         print('\n4 - Things we have no clue about:')
-        #print('\n  4.1 - Non-personalized list:')
         
         resampled_preds_high_std = high_std(model_path, liveUserID, new_ratings, item_popularity)
            # ['item', 'std', 'count', 'rank'] 
@@ -278,11 +259,6 @@ if __name__ == "__main__":
         # print(recs_no_clue_items[['item', 'rank', 'count', 'title']])
         print(recs_no_clue_items[['rank', 'count', 'title']])
         
-        #print('\n  4.2 - Personalized list:')
-        #print('\tProblematic: it is both memory expensive and computation expensive.') 
-        #print('\tTwo levels iteration (161320 * 20 * 57433) & giant matrix (161320 * 57433)')
-        
-        
         #===> 5 - Things that are controversial
         # essential components: offline user_latent matrix; new user feature array; 
         # idea:
@@ -293,15 +269,11 @@ if __name__ == "__main__":
             # user_features_(numpy.ndarray): The :math:`m \\times k` user-feature matrix.
             # user_index_(pandas.Index): Users in the model (length=:math:`n`).
         umat = trained_model.user_features_
-        # np.ndarray
-        # print(liveUser_feature)
-        # np.ndarray 
+        
         users = trained_model.user_index_
-        # print(users)
         distance_method = 'cosine'
         neighbors = find_neighbors(umat, users, liveUser_feature, distance_method, num_neighbors)
             # ['user', 'distance'] 
-        # print(neighbors.user.unique())
         variance_neighbors = controversial(trained_model, neighbors.user.unique(), item_popularity)
             # ['item', 'variance', 'count', 'rank']
         variance_neighbors_titled =  pd.merge(variance_neighbors, movie_title, how = 'left', on = 'item')       
@@ -309,7 +281,7 @@ if __name__ == "__main__":
         variance_neighbors_titled_noRated =  variance_neighbors_titled[~variance_neighbors_titled['item'].isin(rated_items)]
         variance_neighbors_titled_noRated_sorted =  variance_neighbors_titled_noRated.sort_values(by = 'variance', ascending = False)
         recs_controversial_items = variance_neighbors_titled_noRated_sorted.head(N)
-        # print(recs_controversial_items[['item', 'rank', 'count', 'variance', 'title']])
+        
         print(recs_controversial_items[['rank', 'count', 'title']])
         print('-------------------------------------------------------------------------------------')
         '''

@@ -7,13 +7,15 @@ if not sys.warnoptions:
 '''            
 import numpy as np
 import pandas as pd
-#from lenskit.algorithms import als
-import customizedALS
-import setpath
+from setpath import set_data_path
 import time
 import pickle
-from load_npz import load_trainset_npz
-    
+
+
+# You can import different datasets here from Lenskit
+from lenskit.datasets import MovieLens
+
+
 def averaged_item_score(algo, transet, item_popularity, a = 0.2):  
     '''
         algo: trained implicitMF model
@@ -22,15 +24,12 @@ def averaged_item_score(algo, transet, item_popularity, a = 0.2):
         N: # of recommendations
         item_popularity: ['item', 'count', 'rank']
     '''
-    ###
+
     items = transet.item.unique()
-        # items is NOT sorted by derault
+        # items is NOT sorted by default
     users = transet.user.unique()
     num_users = len(users)
-        # users is NOT sorted by derault
-    # print(num_users)
-        # 161320 users
-    # print(users)
+        # users is NOT sorted by default
     
     ## discounting popular items
     highest_count = item_popularity['count'].max()
@@ -38,21 +37,18 @@ def averaged_item_score(algo, transet, item_popularity, a = 0.2):
     while highest_count/(10 ** digit) > 1:
         digit = digit + 1
     denominator = 10 ** digit
-    # print(denominator)
     
     ## items: ndarray -> df
     ave_scores_df = pd.DataFrame(items, columns = ['item'])
     ave_scores_df['ave_score'] = 0
     ave_scores_df['ave_discounted_score'] = 0
-    #print(ave_scores_df.head(20))
-    #print(ave_scores_df.tail(20))
     calculated_users = -1
     start = time.time()
     for user in users:
-    #for user in users[0:1000]:
         calculated_users += 1;
         print(num_users - (calculated_users + 1), end = '\r') 
             # flushing does not work
+        
         user_implicit_preds = algo.predict_for_user(user, items)
             # the ratings of the user is already in the trainset used to train the algo
             # return a series with 'items' as the index, order is the same
@@ -65,11 +61,8 @@ def averaged_item_score(algo, transet, item_popularity, a = 0.2):
                 
         ave_scores_df['ave_score'] = (ave_scores_df['ave_score'] * calculated_users + user_implicit_preds_df['score'])/(calculated_users + 1)
         ave_scores_df['ave_discounted_score'] = (ave_scores_df['ave_discounted_score'] * calculated_users + user_implicit_preds_df['discounted_score'])/(calculated_users + 1)
-    #print(user_implicit_preds_df.head(20))
-    #print(user_implicit_preds_df.tail(20))
     
     print(ave_scores_df.head(20))
-    #print(ave_scores_df.tail(20))
     print("\nIt took %.0f seconds to calculate the averaved item scores." % (time.time() - start))
     
     return ave_scores_df
@@ -78,21 +71,20 @@ if __name__ == "__main__":
     
 
     ### Import implicit MF model, saved in an object
-    f_import = open('../model/implictMF.pkl', 'rb')
+    f_import = open('model/implictMF.pkl', 'rb')
     algo = pickle.load(f_import)
     f_import.close()
     
     ### Import offline dataset, this was  also used as the transet in RSSA
-    data_path = setpath.setpath()
-    fullpath_trian = data_path + 'train.npz'
+    data_path = set_data_path()
     attri_name = ['user', 'item', 'rating', 'timestamp']
-    ratings_train = load_trainset_npz(fullpath_trian, attri_name)
+    
+    # This is the training data being loaded
+    ratings_train = MovieLens('data/ml-latest-small').ratings
     
     ### Import item popularity for discounting from the outout side
-    #data_path = setpath.setpath()
     item_popularity = pd.read_csv(data_path + 'item_popularity.csv')
     
     ave_item_score = averaged_item_score(algo, ratings_train, item_popularity)
         # ['item', 'ave_score', 'ave_discounted_score']
-        # It took 2499 seconds to calculate the averaved item scores.
     ave_item_score.to_csv(data_path + 'averaged_item_score_implicitMF.csv', index = False)

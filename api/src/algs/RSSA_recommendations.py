@@ -24,13 +24,11 @@ def RSSA_live_prediction(algo, liveUserID, new_ratings, item_popularity):
     '''
     items = item_popularity.item.unique()
         # items is NOT sorted
-    #>>> items, rating_counts = np.unique(ratings_train['item'], return_counts = True)
-        # items is sorted by default
+    
     als_implicit_preds, liveUser_feature = algo.predict_for_user(liveUserID, items, new_ratings)
         # return a series with 'items' as the index & liveUser_feature: np.ndarray
     als_implicit_preds_df = als_implicit_preds.to_frame().reset_index()
     als_implicit_preds_df.columns = ['item', 'score']
-    # print(als_implicit_preds_df.sort_values(by = 'score', ascending = False).head(10))
     
     ## discounting popular items
     highest_count = item_popularity['count'].max()
@@ -38,7 +36,6 @@ def RSSA_live_prediction(algo, liveUserID, new_ratings, item_popularity):
     while highest_count/(10 ** digit) > 1:
         digit = digit + 1
     denominator = 10 ** digit
-    # print(denominator)
     
     a = 0.5 ## updated Jul. 6, 2021
     als_implicit_preds_popularity_df = pd.merge(als_implicit_preds_df, item_popularity, how = 'left', on = 'item')
@@ -46,16 +43,13 @@ def RSSA_live_prediction(algo, liveUserID, new_ratings, item_popularity):
     RSSA_preds_df['discounted_score'] = RSSA_preds_df['score'] - a*(RSSA_preds_df['count']/denominator)
         # ['item', 'score', 'count', 'rank', 'discounted_score']
     
-    # RSSA_preds_df_sorted = RSSA_preds_df.sort_values(by = 'discounted_score', ascending = False)
-        
     return RSSA_preds_df, liveUser_feature    
 
 
 def high_std(model_path, liveUserID, new_ratings, item_popularity):
-#def high_std(model_path, liveUserID, new_ratings, item_popularity):
-    
     items = item_popularity.item.unique()
-    ## items: ndarray -> df
+        ## items: ndarray -> df
+    
     # The 'items' here is the item IDs of the trainset of RSSA dataset
     all_items_resampled_preds_df = pd.DataFrame(items, columns = ['item'])
     
@@ -96,7 +90,7 @@ def high_std(model_path, liveUserID, new_ratings, item_popularity):
     # print(all_items_resampled_preds_df['std'])    
     all_items_std_df = all_items_resampled_preds_df[['item', 'std']]
         # ['item', 'std']
-    all_items_std_df = pd.merge(all_items_std_df, item_popularity, how = 'left', on = 'item')
+    all_items_std_df = pd.merge(all_items_std_df, item_popularity, how='left', on='item')
         # ['item', 'std', 'count', 'rank'] 
     
     return all_items_std_df
@@ -148,10 +142,7 @@ def similarity_user_features(umat, users, feature_newUser, method = 'cosine'):
                 # the default value of ord parameter in numpy.linalg.norm is 2.
             distance.append(dis)
     # convert to a dataframe with indexing of items
-    # print(users)
-        # Int64Index
     distance = pd.DataFrame({'user': users.values, 'distance': distance})
-    #print(distance.head())
 
     return distance
 
