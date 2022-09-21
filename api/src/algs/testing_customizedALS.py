@@ -5,14 +5,8 @@ if not sys.warnoptions:
 '''
     There will be NumbaDeprecationWarnings here, use the above code to hide the warnings
 '''          
-import numpy as np
 import pandas as pd
-#from lenskit.algorithms import als
-import customizedALS
-import setpath
-import time
 import pickle
-from load_npz import load_trainset_npz
 
 
 if __name__ == '__main__':

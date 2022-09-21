@@ -1,4 +1,5 @@
 import sys
+import os
 from pathlib import Path
 import json
 from flask import Flask
@@ -15,7 +16,7 @@ def init_survey_user_db():
 	with open(config_path) as f:
 		settings = json.load(f)
 
-	SURVEY_DB = settings['userdb']
+	SURVEY_DB = 'sqlite:///' + os.path.abspath(settings['userdb'])
 
 	app.config['SQLALCHEMY_DATABASE_URI'] = SURVEY_DB
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

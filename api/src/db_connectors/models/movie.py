@@ -5,7 +5,7 @@ from db_connectors.db import db
 
 @dataclass
 class RankGroup(db.Model):
-	__bind_key__ = 'postgres' 
+	__bind_key__ = 'movies' 
 	__tablename__ = 'rank_group'
 
 	id:int = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -14,7 +14,7 @@ class RankGroup(db.Model):
 
 @dataclass
 class Movie(db.Model):
-	__bind_key__ = 'postgres'
+	__bind_key__ = 'movies'
 	__tablename__ = 'movie'
 
 	id:int = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -51,7 +51,7 @@ class Movie(db.Model):
 
 @dataclass
 class MovieEmotions(db.Model):
-	__bind_key__ = 'postgres'
+	__bind_key__ = 'movies'
 	__tablename__ = 'movie_emotions'
 
 	id:int = db.Column(db.Integer, primary_key=True, autoincrement=True)

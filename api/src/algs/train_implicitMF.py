@@ -14,7 +14,7 @@ from setpath import set_data_path
 from lenskit.datasets import MovieLens
 
 # You can import different algorithms here from Lenskit
-from lenskit.algorithms import user_knn as knn
+from lenskit.algorithms import als
 
 data_path = set_data_path()
 attri_name = ['user', 'item', 'rating', 'timestamp']
@@ -60,7 +60,7 @@ print("Training models ...")
 start = time.time()
 
 # This is where you train your model using your algorithm of choice
-algo = knn.UserUser(20, min_nbrs=5)
+algo = als.BiasedMF(20, iterations=10, method="lu")
 
 algo.fit(ratings_train)
 end = time.time() - start

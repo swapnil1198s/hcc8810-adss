@@ -13,6 +13,7 @@ from . import setpath
 import pickle
 from scipy.spatial.distance import cosine
 import os
+from lenskit.algorithms import als
 
 def RSSA_live_prediction(algo, liveUserID, new_ratings, item_popularity):    
     '''
@@ -25,7 +26,15 @@ def RSSA_live_prediction(algo, liveUserID, new_ratings, item_popularity):
     items = item_popularity.item.unique()
         # items is NOT sorted
     
-    als_implicit_preds, liveUser_feature = algo.predict_for_user(liveUserID, items, new_ratings)
+    # ri_idxes = algo.item_index_.get_indexer_for(new_ratings.index)
+    # ri_good = ri_idxes >= 0
+    # ri_it = ri_idxes[ri_good]
+    # ri_val = new_ratings.values[ri_good]
+    # ri_val *= algo.weight
+    # u_feat = als._train_bias_row_lu(ri_it, ri_val, algo.item_features_, algo.regularization)
+    
+    # als_implicit_preds, liveUser_feature = algo.predict_for_user(liveUserID, items, new_ratings)
+    als_implicit_preds = algo.predict_for_user(liveUserID, items, new_ratings)
         # return a series with 'items' as the index & liveUser_feature: np.ndarray
     als_implicit_preds_df = als_implicit_preds.to_frame().reset_index()
     als_implicit_preds_df.columns = ['item', 'score']
@@ -43,7 +52,8 @@ def RSSA_live_prediction(algo, liveUserID, new_ratings, item_popularity):
     RSSA_preds_df['discounted_score'] = RSSA_preds_df['score'] - a*(RSSA_preds_df['count']/denominator)
         # ['item', 'score', 'count', 'rank', 'discounted_score']
     
-    return RSSA_preds_df, liveUser_feature    
+    # return RSSA_preds_df, liveUser_feature 
+    return RSSA_preds_df   
 
 
 def high_std(model_path, liveUserID, new_ratings, item_popularity):
@@ -194,7 +204,8 @@ def get_RSSA_preds(liveUserID):
         #a series; np.ndarray
         
     ### Predicting
-    [RSSA_preds, liveUser_feature] = RSSA_live_prediction(trained_model, liveUserID, new_ratings, item_popularity)
+    # [RSSA_preds, liveUser_feature] = RSSA_live_prediction(trained_model, liveUserID, new_ratings, item_popularity)
+    [RSSA_preds] = RSSA_live_prediction(trained_model, liveUserID, new_ratings, item_popularity)
         # ['item', 'score', 'count', 'rank', 'discounted_score']
         # liveUser_feature: ndarray
     RSSA_preds_noRatedItems = RSSA_preds[~RSSA_preds['item'].isin(rated_items)]

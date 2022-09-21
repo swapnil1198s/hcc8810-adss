@@ -692,8 +692,9 @@ class ImplicitMF(MFPredictor):
             ri_val = ratings.values[ri_good]
             ri_val *= self.weight
             u_feat = _train_implicit_row_lu(ri_it, ri_val, self.item_features_, self.OtOr_)
-            return self.score_by_ids(user, items, u_feat), u_feat
+            
             # customized here to return u_feat for the live user
+            return self.score_by_ids(user, items, u_feat), u_feat
         else:
             # look up user index
             return self.score_by_ids(user, items)

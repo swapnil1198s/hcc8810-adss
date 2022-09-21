@@ -42,7 +42,8 @@ class RSSACompute:
 		new_ratings = pd.Series(np.array([np.float64(rating.rating) for rating in ratings]), index=rated_items)
 		
 		### Predicting
-		[RSSA_preds, liveUser_feature] = RSSA.RSSA_live_prediction(self.trained_model, user_id, new_ratings, self.item_popularity)
+		# [RSSA_preds, liveUser_feature] = RSSA.RSSA_live_prediction(self.trained_model, user_id, new_ratings, self.item_popularity)
+		RSSA_preds = RSSA.RSSA_live_prediction(self.trained_model, user_id, new_ratings, self.item_popularity)
 		# ['item', 'score', 'count', 'rank', 'discounted_score']
 		# liveUser_feature: ndarray    
 		RSSA_preds_noRatedItems = RSSA_preds[~RSSA_preds['item'].isin(rated_items)]

@@ -2,6 +2,6 @@
   "port": 5001,
   "debug": true,
   "survey_id": 1,
-  "userdb": "sqlite:///../db_connectors/db/userdatabase.db",
-  "movidb": "sqlite:///../db_connectors/db/moviedatabase.db"
+  "userdb": "db_connectors/db/userdatabase.db",
+  "movidb": "db_connectors/db/moviedatabase.db"
 }

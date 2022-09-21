@@ -32,6 +32,7 @@ class MovieGridItem extends Component {
 							numberOfStars={5}
 							name={currentMovie.movie_id} />
 					</div>
+					{/* <p style={{color: "white"}}>Yes | No</p> */}
 				</div>
 				<div className="grid-item-label" style={{ position: "absolute" }}>
 					{currentMovie.title + " (" + currentMovie.year + ")"}

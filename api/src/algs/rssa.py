@@ -23,7 +23,8 @@ def RSSA_live_prediction(algo, liveUserID, new_ratings, item_popularity):
     '''
     items = item_popularity.item.unique()
         # items is NOT sorted
-    als_implicit_preds, liveUser_feature = algo.predict_for_user(liveUserID, items, new_ratings)
+    # als_implicit_preds, liveUser_feature = algo.predict_for_user(liveUserID, items, new_ratings)
+    als_implicit_preds = algo.predict_for_user(liveUserID, items, new_ratings)
         # return a series with 'items' as the index & liveUser_feature: np.ndarray
     als_implicit_preds_df = als_implicit_preds.to_frame().reset_index()
     als_implicit_preds_df.columns = ['item', 'score']
@@ -43,7 +44,8 @@ def RSSA_live_prediction(algo, liveUserID, new_ratings, item_popularity):
     
     # RSSA_preds_df_sorted = RSSA_preds_df.sort_values(by = 'discounted_score', ascending = False)
         
-    return RSSA_preds_df, liveUser_feature    
+    # return RSSA_preds_df, liveUser_feature
+    return RSSA_preds_df
 
 
 def high_std(model_path, liveUserID, new_ratings, item_popularity):

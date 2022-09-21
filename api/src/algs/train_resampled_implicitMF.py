@@ -16,7 +16,7 @@ import os
 from lenskit.datasets import MovieLens
 
 # You can import different algorithms here from Lenskit
-from lenskit.algorithms import user_knn as knn
+from lenskit.algorithms import als
 
 data_path = setpath.set_data_path()
 fullpath_trian = data_path + 'train.npz'
@@ -54,7 +54,7 @@ alpha = 0.5
 start = time.time()
 
 # This is where you train your model using your algorithm of choice
-resampled_algo = knn.UserUser(20, min_nbrs=5)
+resampled_algo = als.BiasedMF(20, iterations=10, method="lu")
 
 model_path = os.path.join(os.path.dirname(__file__), './model/')
 for i in range(numRepetition):

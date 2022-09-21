@@ -2,6 +2,7 @@ from sqlite3 import Error
 import pandas as pd
 import math
 import json
+import os
 from pathlib import Path
 
 from dataclasses import dataclass
@@ -139,7 +140,7 @@ def init_movie_db():
 	with open(config_path) as f:
 		settings = json.load(f)
 
-	MOVIE_DB = settings['movidb']
+	MOVIE_DB = 'sqlite:///' + os.path.abspath(settings['movidb'])
 
 	app.config['SQLALCHEMY_DATABASE_URI'] = MOVIE_DB
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
