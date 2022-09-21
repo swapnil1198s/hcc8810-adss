@@ -14,6 +14,9 @@ def init_dirs():
 	
 	if not os.path.exists('temp'):
 		os.makedirs('temp')
+		
+	if not os.path.exists('db_connectors/db'):
+	    os.makedirs('db_connectors/db')
 
 def get_data():
 	print("Getting data from RSSA server.")
@@ -43,7 +46,7 @@ def get_data():
 		urllib.request.urlretrieve('https://files.grouplens.org/datasets/movielens/ml-latest-small.zip', 'temp/ml-latest-small.zip')
 		with zipfile.ZipFile("temp/ml-latest-small.zip") as zip_ref:
 			zip_ref.extractall('temp/')
-		shutil.move('ml-latest-small', 'algs/data/ml-latest-small')
+		shutil.move('temp/ml-latest-small', 'algs/data/ml-latest-small')
 	else:
 		print('Movie lens dataset exists. Nothing to do.')
 
