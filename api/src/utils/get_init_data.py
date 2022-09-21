@@ -17,7 +17,7 @@ def init_dirs():
 
 def get_data():
 	print("Getting data from RSSA server.")
-	urllib.request.urlretrieve('http://127.0.0.1:8000/data/all', "temp/rssa.zip")
+	urllib.request.urlretrieve('https://rssa.recsys.dev/newrs/api/v1', "temp/rssa.zip")
 
 	print("Unpacking data files.")
 	with zipfile.ZipFile("temp/rssa.zip", 'r') as zip_ref:
