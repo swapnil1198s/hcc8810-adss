@@ -314,27 +314,7 @@ class RecommendationPage extends Component {
 
         return this.state.ready ? (
             <>
-                <Steps
-                    enabled={stepsEnabled}
-                    steps={steps}
-                    initialStep={initialStep}
-                    onExit={this.onExit}
-                    options={{
-                        showStepNumbers: true,
-                        scrollToElement: true,
-                        hideNext: false,
-                        nextToDone: true
-                    }}
-                    ref={steps => (this.steps = steps)}
-                    onBeforeChange={this.onBeforeChange}
-                />
-                <div className="jumbotron">
-                    <h1 className="header">{this.props.pageHeader}</h1>
-                    <p>{this.props.headerSubtitle}
-                    </p>
-                </div>
-
-                <div className="row g-0">
+              <div className="row g-0">
                     {/* <MovieSidePanel id="leftPanel"
                         movieList={leftItems}
                         hoverHandler={this.handleHover}
@@ -345,6 +325,7 @@ class RecommendationPage extends Component {
                         selectedid={selectedid}
                         panelByline={leftbyline}
                     /> */}
+                    
                     <MovieSidePanel id="leftPanel" movieList={leftItems}
                         panelTitle={leftCondition}
                         panelByline={leftbyline}
@@ -393,8 +374,25 @@ class RecommendationPage extends Component {
                         ratingHandler={this.handleRating}
                     />
                 </div>
-                <div className="jumbotron jumbotron-footer">
-                    <Button className="next-button footer-btn" variant={buttonVariant} size="lg"
+                <Steps
+                    enabled={stepsEnabled}
+                    steps={steps}
+                    initialStep={initialStep}
+                    onExit={this.onExit}
+                    options={{
+                        showStepNumbers: true,
+                        scrollToElement: true,
+                        hideNext: false,
+                        nextToDone: true
+                    }}
+                    ref={steps => (this.steps = steps)}
+                    onBeforeChange={this.onBeforeChange}
+                />
+                <div className="jumbotron">
+                    <h1 className="header">{this.props.pageHeader}</h1>
+                    <p>{this.props.headerSubtitle}
+                    </p>
+                    <Button className="next-button" variant={buttonVariant} size="lg"
                         disabled={buttonDisabled && !this.state.loading}
                         onClick={this.updateSurvey}>
                         {!this.state.loading ? 'Next'

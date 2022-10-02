@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import StarRatings from 'react-star-ratings';
+import { Button } from 'react-bootstrap';
 
 const defaultMovieIco = require("../res/default_movie_icon.svg");
+//import thumbs up and thumbs down icons
+const thumbsUpIco = require("../res/thumbs_up.png");
+const thumbsDownIco = require("../res/thumbs_down.png");
 
 class MovieGridItem extends Component {
 
@@ -21,7 +25,7 @@ class MovieGridItem extends Component {
 					backgroundImage: "url(" + currentMovie.poster + "), url('" + defaultMovieIco + "')",
 				}}>
 				<div className="overlay">
-					<div className={starDivClass}>
+					{/* <div className={starDivClass}>
 						<StarRatings
 							rating={currentMovie.rating}
 							starRatedColor="rgb(252,229,65)"
@@ -31,8 +35,13 @@ class MovieGridItem extends Component {
 							changeRating={changeRating}
 							numberOfStars={5}
 							name={currentMovie.movie_id} />
+					</div> */}
+
+					{/* thumbsUp button changes rating to 5 and thumbsDown changes rating to 1*/}
+					<div className={starDivClass}>
+						<Button className='thumbs' onClick={(evt) => changeRating(5,currentMovie.movie_id)} style={{background:'white', minHeight:'30px', padding: '0', border:'none' }}><img src={thumbsUpIco}/></Button>
+						<Button className='thumbs' onClick={(evt) => changeRating(1,currentMovie.movie_id)} style={{background:'white', minHeight:'30px', padding: '0', border:'none', marginLeft:'20px'}}><img src={thumbsDownIco}/></Button>
 					</div>
-					{/* <p style={{color: "white"}}>Yes | No</p> */}
 				</div>
 				<div className="grid-item-label" style={{ position: "absolute" }}>
 					{currentMovie.title + " (" + currentMovie.year + ")"}
